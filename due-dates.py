@@ -33,32 +33,19 @@ def getPageInfo(pArg):
 #after issue with the list going out of range, turns out that my request
 #STOP - learned samange deals with data sets in pages and will have to navigate
 #as such, set to 100 and then will have to develop a way to change pages (maybe)
-#check for incidents that belong to IT
 
+#check for incidents that belong to IT
 nuPyData = getPageInfo()
 
 for i in range(maxEntry):
-    #check for nonetype, print the id number so I can check
+    #TODO - check for nonetype, print the id number so I can check
+
      #put a try-catch to let it stop gracefully
     if nuPyData[i]['category']['id'] == 98611:
         gprint('#' + str(i+1) + ' ' + nuPyData[i]['name'] + '\nID: ' + str(nuPyData[i]['id']))
 
-        #change the page and start over again
+        #TODO - change the page and start over again
         
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
 
 #TODO - modify due date based on priority level
 
