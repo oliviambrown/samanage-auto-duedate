@@ -13,10 +13,13 @@ maxEntry = 100
 
 userToken = 'b2Jyb3duQHN1bW1pdHJkdS5jb20=:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxODQxNDEyLCJnZW5lcmF0ZWRfYXQiOiIyMDE4LTAxLTE2IDE1OjI4OjE1In0.jceCALvimJAr6Yn1s7UnsW0KWxnc2ag4V_Vrjpz7wnj2bxQjDXCAoBi0I9MCnRTJ1-a4rAlaHh_jI-0in8pteg'
 samHead = {'X-Samanage-Authorization' : 'Bearer ' + userToken}
- 
-r = requests.get(samanageURL)
-numOfPages = r.headers['X-Total-Pages']
-#--------------------------------------------------------------------------------------------
+
+genSam = requests.get(samanageURL, headers=samHead)
+numOfPages = genSam.headers['x-total-pages']
+
+#it team dictionary - current members and id num
+itTeam = {'peeps' : ['Alex Choi', 'Olivia Brown', 'IT'], 'id' : 98611}
+    
 
 #function that gets the page, puts in credentials, and tranforms the data
 def getPageInfo(pArg):
@@ -31,20 +34,36 @@ def getPageInfo(pArg):
 
 #checking for it incidents
 #after issue with the list going out of range, turns out that my request
-#STOP - learned samange deals with data sets in pages and will have to navigate
+#learned samange deals with data sets in pages and will have to navigate
 #as such, set to 100 and then will have to develop a way to change pages (maybe)
 
+#long explanation - I struggled with the logic here because i didn't realize that some tickets came with empty categories
+#and therefore gave me the error that i cannot iterate a none type
+
 #check for incidents that belong to IT
-nuPyData = getPageInfo()
+nuPyData = getPageInfo(2)
 
 for i in range(maxEntry):
-    #TODO - check for nonetype, print the id number so I can check
+    
+    
+    #Check category first for IT id, if category is null then check the assignee, me, alex, or IT
+    if nuPyData[i]['category'] is not None and nuPyData[i]['category']['id'] == itTeam['id']:
+        print(nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']))
+        
+    elif nuPyData[i]['assignee'] is not None and nuPyData[i]['assignee']['name'] in itTeam['peeps']:
+        print(nuPyData[i]['name'] + ' ' + str(nuPyData[i]['id']))
 
-     #put a try-catch to let it stop gracefully
-    if nuPyData[i]['category']['id'] == 98611:
-        gprint('#' + str(i+1) + ' ' + nuPyData[i]['name'] + '\nID: ' + str(nuPyData[i]['id']))
+    #how the heck do i deal with ones that have neither the assignee or the id? should be rare right?
+    #but that raises the option of what if it's facilities or production, i will stop here, now lets deal with paging
+    elif nuPyData[i]['assignee'] is None:
+        print('STRAY TICKET: ' + nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']))
 
-        #TODO - change the page and start over again
+
+
+
+        
+    #NEXT TODO - change the page and start over again
+    
         
 
 #TODO - modify due date based on priority level
