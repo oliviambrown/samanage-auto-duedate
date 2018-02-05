@@ -41,29 +41,30 @@ def getPageInfo(pArg):
 #and therefore gave me the error that i cannot iterate a none type
 
 #check for incidents that belong to IT
-nuPyData = getPageInfo(2)
+nuPyData = getPageInfo(1)
 
 for i in range(maxEntry):
+
+    #NEXT TODO - check for open incidents
+    if nuPyData[i]['state'] != 'Closed' and nuPyData[i]['state'] != 'Resolved':
     
-    
-    #Check category first for IT id, if category is null then check the assignee, me, alex, or IT
-    if nuPyData[i]['category'] is not None and nuPyData[i]['category']['id'] == itTeam['id']:
-        print(nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']))
+        #Check category first for IT id, if category is null then check the assignee, me, alex, or IT
+        if nuPyData[i]['category'] is not None and nuPyData[i]['category']['id'] == itTeam['id']:
+            print(nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']) +' ' +nuPyData[i]['state'])
         
-    elif nuPyData[i]['assignee'] is not None and nuPyData[i]['assignee']['name'] in itTeam['peeps']:
-        print(nuPyData[i]['name'] + ' ' + str(nuPyData[i]['id']))
+        elif nuPyData[i]['assignee'] is not None and nuPyData[i]['assignee']['name'] in itTeam['peeps']:
+            print(nuPyData[i]['name'] + ' ' + str(nuPyData[i]['id']) +' ' +nuPyData[i]['state'])
 
-    #how the heck do i deal with ones that have neither the assignee or the id? should be rare right?
-    #but that raises the option of what if it's facilities or production, i will stop here, now lets deal with paging
-    elif nuPyData[i]['assignee'] is None:
-        print('STRAY TICKET: ' + nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']))
-
-
+        #how the heck do i deal with ones that have neither the assignee or the id? should be rare right?
+        #but that raises the option of what if it's facilities or production, i will stop here, now lets deal with paging
+        elif nuPyData[i]['assignee'] is None:
+             print('STRAY TICKET: ' + nuPyData[i]['name']+ ' ' + str(nuPyData[i]['id']) + ' ' + nuPyData[i]['state'])
 
 
-        
-    #NEXT TODO - change the page and start over again
-    
+
+#NEXT TODO - change the page and start over again, questioning if this is necessary..yes, in theory
+             
+
         
 
 #TODO - modify due date based on priority level
